@@ -1,4 +1,5 @@
 import pygame
+from settings import gun_speed
 
 
 class Gun:
@@ -14,6 +15,7 @@ class Gun:
         self.rect.bottom = self.screen_rect.bottom
         self.mright = False
         self.mleft = False
+        self.step = gun_speed
 
     def output(self):
         """рисование пушки"""
@@ -22,9 +24,9 @@ class Gun:
     def update_gun(self):
         """обновление позиции пушки"""
         if self.mright and self.rect.right < self.screen_rect.right:
-            self.center += 1.5
+            self.center += self.step
 
         if self.mleft and self.rect.left > 0:
-            self.center -= 1.5
+            self.center -= self.step
 
         self.rect.centerx = self.center
