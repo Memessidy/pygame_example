@@ -3,6 +3,8 @@ import sys
 from bullet import Bullet
 from ufo import Ufo
 import settings
+import time
+from settings import sleep_time
 
 
 def events(screen, gun, bullets):
@@ -40,17 +42,45 @@ def update(bg_color, screen, gun, ufos, bullets):
     pygame.display.flip()
 
 
-def update_bullets(bullets):
+def update_bullets(screen, ufos, bullets):
     """Обновлене позиций пуль"""
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
 
+    collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
+    if len(ufos) == 0:
+        bullets.empty()
+        create_army(screen, ufos)
 
-def update_ufos(ufos):
+
+def destroy_cannon(stats, screen, gun, ufos, bullets):
+    """collision between cannon and invaders"""
+    stats.guns_left -= 1
+    ufos.empty()
+    bullets.empty()
+    create_army(screen, ufos)
+    gun.create_gun()
+    time.sleep(sleep_time)
+
+
+def update_ufos(stats, screen, gun, ufos, bullets):
     """Обновляет позицию пришельцев"""
     ufos.update()
+    if pygame.sprite.spritecollideany(gun, ufos):
+        destroy_cannon(stats, screen, gun, ufos, bullets)
+    ufos_check(stats, screen, gun, ufos, bullets)
+
+
+def ufos_check(stats, screen, gun, ufos, bullets):
+    """is invaders in the bottom of display?"""
+    screen_rect = screen.get_rect()
+    for ufo in ufos.sprites():
+        if ufo.rect.bottom >= screen_rect.bottom:
+            destroy_cannon(stats, screen, gun, ufos, bullets)
+            break
+
 
 def create_army(screen, ufos):
     """создание армии пришельцев"""

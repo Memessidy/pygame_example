@@ -30,3 +30,8 @@ class Gun:
             self.center -= self.step
 
         self.rect.centerx = self.center
+
+    def create_gun(self):
+        """set cannon in a center of display"""
+        self.center = self.screen_rect.centerx
+
