@@ -31,9 +31,10 @@ def events(screen, gun, bullets):
                 gun.mleft = False
 
 
-def update(bg_color, screen, gun, ufos, bullets):
+def update(bg_color, screen, stats, sc, gun, ufos, bullets):
     """Обновление экрана"""
     screen.fill(bg_color)
+    sc.show_score()
     for bullet in bullets.sprites():
         bullet.draw_bullet()
 
@@ -57,12 +58,16 @@ def update_bullets(screen, ufos, bullets):
 
 def destroy_cannon(stats, screen, gun, ufos, bullets):
     """collision between cannon and invaders"""
-    stats.guns_left -= 1
-    ufos.empty()
-    bullets.empty()
-    create_army(screen, ufos)
-    gun.create_gun()
-    time.sleep(sleep_time)
+    if stats.guns_left > 0:
+        stats.guns_left -= 1
+        ufos.empty()
+        bullets.empty()
+        create_army(screen, ufos)
+        gun.create_gun()
+        time.sleep(sleep_time)
+    else:
+        stats.run_game = False
+        sys.exit()
 
 
 def update_ufos(stats, screen, gun, ufos, bullets):
