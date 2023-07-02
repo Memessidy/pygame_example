@@ -25,9 +25,8 @@ def run():
             gun.update_gun()
             bullets.update()
             controls.update(bg_color, screen, stats, sc, gun, ufos, bullets)
-            controls.update_bullets(screen, ufos, bullets)
+            controls.update_bullets(screen, stats, sc, ufos, bullets)
             controls.update_ufos(stats, screen, gun, ufos, bullets)
 
 
-if __name__ == '__main__':
-    run()
+run()

@@ -43,7 +43,7 @@ def update(bg_color, screen, stats, sc, gun, ufos, bullets):
     pygame.display.flip()
 
 
-def update_bullets(screen, ufos, bullets):
+def update_bullets(screen, stats, sc, ufos, bullets):
     """Обновлене позиций пуль"""
     bullets.update()
     for bullet in bullets.copy():
@@ -51,6 +51,14 @@ def update_bullets(screen, ufos, bullets):
             bullets.remove(bullet)
 
     collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
+    if collisions:
+        for ufos in collisions.values():
+
+            stats.score += 10 * len(ufos)
+
+        sc.image_score()
+        check_high_score(stats, sc)
+
     if len(ufos) == 0:
         bullets.empty()
         create_army(screen, ufos)
@@ -104,3 +112,12 @@ def create_army(screen, ufos):
             ufo.rect.x = ufo.x
             ufo.rect.y = ufo.rect.height + ufo.rect.height * row_index
             ufos.add(ufo)
+
+
+def check_high_score(stats, sc):
+    """check new records"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        sc.image_high_score()
+        with open('high_score.txt', 'w') as f:
+            f.write(str(stats.high_score))
